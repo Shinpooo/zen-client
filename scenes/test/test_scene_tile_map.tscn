@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=4 uid="uid://d0i2t7xprtfv2"]
+
+[ext_resource type="TileSet" uid="uid://b45x2om05rflw" path="res://tilesets/game_tile_set.tres" id="1_mdxdo"]
+[ext_resource type="PackedScene" uid="uid://d3srdueygm4w4" path="res://scenes/characters/character.tscn" id="1_oiw2y"]
+
+[node name="TestSceneTileMap" type="Node2D"]
+
+[node name="GameTileMap" type="Node2D" parent="."]
+
+[node name="Ground" type="TileMapLayer" parent="GameTileMap"]
+tile_map_data = PackedByteArray("AAD//wAAAQAAAAAAAAAAAAAAAQAAAAAAAAD//wEAAQAAAAAAAAD+/wEAAQAAAAAAAAD+/wAAAQAAAAAAAAD+////AQAAAAAAAAD/////AQAAAAAAAAAAAP//AQAAAAAAAAABAAAAAQAAAAAAAAABAP//AQAAAAAAAAABAAEAAQAAAAAAAAAAAAEAAQAAAAAAAAD+/wIAAQAAAAAAAAD//wIAAQAAAAAAAAAAAAIAAQAAAAAAAAABAAIAAQAAAAAAAAD9/wIAAQAAAAAAAAD9/wEAAQAAAAAAAAD9/wAAAQAAAAAAAAD9////AQAAAAAAAAD9//7/AQAAAAAAAAD+//7/AQAAAAAAAAD///7/AQAAAAAAAAAAAP7/AQAAAAAAAAABAP7/AQAAAAAAAAA=")
+tile_set = ExtResource("1_mdxdo")
+
+[node name="character" parent="GameTileMap" instance=ExtResource("1_oiw2y")]
