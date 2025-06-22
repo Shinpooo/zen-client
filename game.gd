@@ -1,45 +1,57 @@
 extends Node2D
 
-@onready var tilemap = get_parent() as TileMapLayer
-@onready var network = $"../Network"
-const CHARACTER_SCENE = preload("res://scenes/characters/character.tscn")  # Replace with your actual path
-var players := {}
+@onready var tilemap  : TileMapLayer = get_parent()           as TileMapLayer
+@onready var network  : Node         = $"../Network"
+@onready var chatbox  : Control      = $"../ChatBox"
+const CHARACTER_SCENE = preload("res://scenes/characters/character.tscn")
 
-func _ready():
-	# Call every frame from Network, or pull manually
-	# get_parent().get_node("Network").connect("snapshot_received", _on_snapshot_received)
-	network.connect("snapshot_received", _on_snapshot_received)
+var players : Dictionary = {}   # uuid → Character node
 
+# -------------------------------------------------------------
 
+func _ready() -> void:
+	if chatbox:
+		print("✅ ChatBox found")
+	else:
+		push_error("❌ ChatBox NOT found in scene tree!")
+		return
 
+	network.connect("snapshot_received",        _on_snapshot)
+	network.connect("chat_message_received",    _on_chat_recv)
+	chatbox.connect("chat_submitted",           _on_chat_send)
+
+# -------------------------------------------------------------
 func _unhandled_input(event):
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		var world_pos = get_global_mouse_position()  # ← Correct for Godot 4
-		var tile_pos = tilemap.local_to_map(world_pos)
-		print("🖱️ Tile clicked at world position:", world_pos, " -> tile:", tile_pos)
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT \
+	and event.pressed:
+		var tile := tilemap.local_to_map(get_global_mouse_position())
+		network.send_move_to(network.player_id, tile.x, tile.y)
 
-		# Send movement request
-		if network.player_id != "":
-			network.send_move_to(network.player_id, tile_pos.x, tile_pos.y)
-
-func _on_snapshot_received(snapshot: Dictionary) -> void:
-	# Despawn players that are no longer in the snapshot
+# -------------------------------------------------------------
+func _on_snapshot(chars: Dictionary) -> void:
+	# Remove missing
 	for id in players.keys():
-		if not snapshot.has(id):
-			print("👋 Player left:", id)
+		if not chars.has(id):
 			players[id].queue_free()
 			players.erase(id)
-			
-	for id in snapshot.keys():
-		var data      : Dictionary = snapshot[id]
-		var tile_dest : Vector2i   = Vector2i(data["x"], data["y"])
 
+	# Add/update
+	for id in chars:
+		var dest := Vector2i(chars[id]["x"], chars[id]["y"])
 		if players.has(id):
-			var char: Node = players[id]
-			if char.current_tile != tile_dest:
-				char.set_target(tile_dest)
+			var c := players[id] as CharacterBody2D      # returns null if wrong type
+			if c.current_tile != dest:
+				c.set_target(dest)
 		else:
-			var inst: Node = CHARACTER_SCENE.instantiate()
-			add_child(inst)
-			inst.init(tilemap, tile_dest)
-			players[id] = inst
+			var n := CHARACTER_SCENE.instantiate()
+			add_child(n)
+			n.init(tilemap, dest)
+			players[id] = n
+
+# -------------------------------------------------------------
+func _on_chat_send(text: String) -> void:
+	network.send_chat(text)
+	chatbox.append_message("Me", text)   # local echo
+
+func _on_chat_recv(from_id: String, text: String) -> void:
+	chatbox.append_message(from_id, text)

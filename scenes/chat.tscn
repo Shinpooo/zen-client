@@ -1,0 +1,37 @@
+[gd_scene load_steps=2 format=3 uid="uid://c6fqj6ma7ed0g"]
+
+[ext_resource type="Script" uid="uid://c2dm4lb03sxqe" path="res://scenes/chat.gd" id="1_4o336"]
+
+[node name="ChatBox" type="Control"]
+layout_mode = 3
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+script = ExtResource("1_4o336")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+offset_right = 68.0
+offset_bottom = 70.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+layout_mode = 2
+offset_right = 68.0
+offset_bottom = 70.0
+
+[node name="ChatLog" type="RichTextLabel" parent="Panel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="ChatInput" type="LineEdit" parent="Panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="SendButton" type="Button" parent="Panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Send"

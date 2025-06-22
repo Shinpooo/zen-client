@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=4 uid="uid://bid3icbixd3h1"]
+[gd_scene load_steps=6 format=4 uid="uid://bid3icbixd3h1"]
 
 [ext_resource type="TileSet" uid="uid://bj6hgslskwgrd" path="res://new_tile_set.tres" id="1_c7s6e"]
 [ext_resource type="Script" uid="uid://b6sbem0xxvdmc" path="res://network.gd" id="2_wijl4"]
 [ext_resource type="Script" uid="uid://2tunmrijrugs" path="res://game.gd" id="3_e0an3"]
 [ext_resource type="PackedScene" uid="uid://d3srdueygm4w4" path="res://scenes/characters/character.tscn" id="4_p5pve"]
+[ext_resource type="PackedScene" uid="uid://c6fqj6ma7ed0g" path="res://scenes/chat.tscn" id="5_urblq"]
 
 [node name="Ground" type="TileMapLayer"]
 scale = Vector2(1, 0.986)
@@ -17,7 +18,14 @@ script = ExtResource("2_wijl4")
 script = ExtResource("3_e0an3")
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(18, 81.1359)
-zoom = Vector2(3.5, 3.5)
+position = Vector2(21, 84.1785)
+zoom = Vector2(3, 3)
 
 [node name="character" parent="." instance=ExtResource("4_p5pve")]
+visible = false
+
+[node name="ChatBox" parent="." instance=ExtResource("5_urblq")]
+offset_left = -165.0
+offset_top = -20.284
+offset_right = -165.0
+offset_bottom = -20.284
