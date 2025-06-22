@@ -23,6 +23,13 @@ func _unhandled_input(event):
 			network.send_move_to(network.player_id, tile_pos.x, tile_pos.y)
 
 func _on_snapshot_received(snapshot: Dictionary) -> void:
+	# Despawn players that are no longer in the snapshot
+	for id in players.keys():
+		if not snapshot.has(id):
+			print("👋 Player left:", id)
+			players[id].queue_free()
+			players.erase(id)
+			
 	for id in snapshot.keys():
 		var data      : Dictionary = snapshot[id]
 		var tile_dest : Vector2i   = Vector2i(data["x"], data["y"])
