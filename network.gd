@@ -7,7 +7,7 @@ signal snapshot_received(snapshot: Dictionary)
 var player_id := ""
 func _ready():
 	randomize()
-	var err = client.connect_to_url("ws://127.0.0.1:8080")
+	var err = client.connect_to_url("wss://zen-server.fly.dev")
 	if err != OK:
 		print("❌ Failed to start WebSocket connection:", err)
 	else:
