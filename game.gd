@@ -51,7 +51,7 @@ func _on_snapshot(chars: Dictionary) -> void:
 # -------------------------------------------------------------
 func _on_chat_send(text: String) -> void:
 	network.send_chat(text)
-	chatbox.append_message("Me", text)   # local echo
+	# chatbox.append_message("Me", text)   # local echo
 
 func _on_chat_recv(from_id: String, text: String) -> void:
-	chatbox.append_message(from_id, text)
+	chatbox.prepend_message(from_id, text)
